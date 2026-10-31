@@ -127,3 +127,12 @@ document.querySelectorAll('img[data-foto]').forEach(img => {
   };
   next();
 });
+
+
+/* ===== Íconos que se animan una sola vez (calendario): se reinician al llegar a verlos ===== */
+if ('IntersectionObserver' in window) {
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { const im = e.target; im.src = im.src.split('?')[0] + '?t=' + Date.now(); }
+  }), { threshold: 0.6 });
+  document.querySelectorAll('img[data-replay]').forEach(i => io.observe(i));
+}
