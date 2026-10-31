@@ -42,9 +42,10 @@ window.onYouTubeIframeAPIReady = () => {
   });
 };
 const isPlaying = () => ready && yt.getPlayerState() === 1;
-playBtn.onclick = () => ready && (isPlaying() ? yt.pauseVideo() : yt.playVideo());
+let userPaused = false, needResume = false;     // userPaused: ella pausó a propósito
+playBtn.onclick = () => { if (!ready) return; if (isPlaying()) { userPaused = true; yt.pauseVideo(); } else { userPaused = false; yt.playVideo(); } };
 bar.oninput = () => ready && yt.seekTo(yt.getDuration() * bar.value / 100, true);
-$('btn-prev').onclick = $('btn-next').onclick = () => ready && (yt.seekTo(0, true), yt.playVideo());
+$('btn-prev').onclick = $('btn-next').onclick = () => { if (!ready) return; userPaused = false; yt.seekTo(0, true); yt.playVideo(); };
 $('btn-repeat').onclick = e => e.currentTarget.classList.toggle('on');
 $('btn-shuffle').onclick = e => e.currentTarget.classList.toggle('on');
 $('yt-player').style.cssText = 'position:fixed;left:-9999px;width:1px;height:1px';
@@ -136,3 +137,18 @@ if ('IntersectionObserver' in window) {
   }), { threshold: 0.6 });
   document.querySelectorAll('img[data-replay]').forEach(i => io.observe(i));
 }
+
+
+/* ===== Al volver de Google Maps (u otra app), la música sigue sola ===== */
+function resumeMusic() {
+  if (!ready || !wantPlay || userPaused || isPlaying()) return;
+  yt.playVideo();
+  needResume = true;                              // si el celular lo bloquea, se reanuda con el próximo toque
+}
+document.addEventListener('visibilitychange', () => { if (!document.hidden) setTimeout(resumeMusic, 300); });
+window.addEventListener('pageshow', () => setTimeout(resumeMusic, 300));
+document.addEventListener('touchend', e => {
+  if (!needResume || e.target.closest('.controls')) return;
+  needResume = false;
+  if (!userPaused && !isPlaying()) yt.playVideo();
+}, { passive: true });
