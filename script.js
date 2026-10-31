@@ -2,11 +2,11 @@
 const CONFIG = {
   fecha: "April 16, 2027 21:00:00",
   youtubeId: "j3ObHjm1fAE",                        // Tiempo de vals - Chayanne
-  whatsapp: "549XXXXXXXXXX",                       // 54 + 9 + código de área + número (REEMPLAZAR)
+  whatsapp: "5491121825254",                       // 54 + 9 + código de área + número (REEMPLAZAR)
   mapsUrl: "https://maps.app.goo.gl/gSovV3jMHaxYqXNNA",
   alias: "vanessa.m",
   galeria: 6,                                      // cantidad de fotos del álbum deslizable (foto2, foto3...)
-  mensajeWa: "Hola! Confirmo mi asistencia a los XV de Vanessa ❤️",
+  mensajeWa: "Hola! Confirmo mi asistencia a los XV de Vanessa",
   // Trivia: q = pregunta, o = opciones, a = número de la opción correcta (0 es la primera). REEMPLAZAR por preguntas reales.
   trivia: [
     { q: "¿Cuál es mi comida favorita?", o: ["Pizza", "Empanadas", "Milanesa"], a: 0 },
