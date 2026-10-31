@@ -56,6 +56,10 @@ h1,h2,h3,.title,.quote{font-family:'Playfair Display',serif;font-weight:500}
 .big{font-size:1.15rem;font-weight:600}
 .info p{max-width:320px}
 
+/* Íconos animados (los GIF son rojos; en los bloques rojos se pasan a blanco) */
+.ico-gif{height:84px;width:auto;max-width:60%;display:block;margin:0 auto 2px}
+.info.alt .ico-gif{filter:brightness(0) invert(1)}
+
 /* Trivia */
 #trivia-box{width:100%;max-width:320px;display:flex;flex-direction:column;gap:10px;align-items:center}
 .q{font-family:'Playfair Display',serif;font-size:1.25rem;margin-bottom:6px}
