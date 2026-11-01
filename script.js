@@ -2,11 +2,11 @@
 const CONFIG = {
   fecha: "April 16, 2027 21:00:00",
   youtubeId: "j3ObHjm1fAE",                        // Tiempo de vals - Chayanne
-  whatsapp: "5491121825254",                       // 54 + 9 + código de área + número (REEMPLAZAR)
+  whatsapp: "549XXXXXXXXXX",                       // 54 + 9 + código de área + número (REEMPLAZAR)
   mapsUrl: "https://maps.app.goo.gl/gSovV3jMHaxYqXNNA",
   alias: "vanessa.m",
   galeria: 6,                                      // cantidad de fotos del álbum deslizable (foto2, foto3...)
-  mensajeWa: "Hola! Confirmo mi asistencia a los XV de Vanessa",
+  mensajeWa: "Hola! Confirmo mi asistencia a los XV de Vanessa ❤️",
   // Trivia: q = pregunta, o = opciones, a = número de la opción correcta (0 es la primera). REEMPLAZAR por preguntas reales.
   trivia: [
     { q: "¿Cuál es mi comida favorita?", o: ["Pizza", "Empanadas", "Milanesa"], a: 0 },
@@ -152,3 +152,19 @@ document.addEventListener('touchend', e => {
   needResume = false;
   if (!userPaused && !isPlaying()) yt.playVideo();
 }, { passive: true });
+
+/* ===== Galería automática: las fotos pasan solas; si las tocan, espera 5 segundos ===== */
+(function () {
+  const track = $('gal');
+  if (!track || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  let visible = false, hold = 0;
+  new IntersectionObserver(e => { visible = e[0].isIntersecting; }, { threshold: 0.3 }).observe(track);
+  ['touchstart', 'pointerdown', 'wheel'].forEach(ev => track.addEventListener(ev, () => { hold = Date.now() + 5000; }, { passive: true }));
+  setInterval(() => {
+    const s = track.children;
+    if (!visible || Date.now() < hold || !s.length) return;
+    let i = Math.round(track.scrollLeft / (s[0].offsetWidth + 8)) + 1;   // 8 = separación entre fotos
+    if (i >= s.length) i = 0;                                            // al final vuelve a la primera
+    s[i].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  }, 3000);                                                              // 3000 = 3 segundos por foto
+})();
