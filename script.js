@@ -2,6 +2,7 @@
 const CONFIG = {
   fecha: "April 16, 2027 21:00:00",
   youtubeId: "j3ObHjm1fAE",                        // Tiempo de vals - Chayanne
+  inicio: 30,                                      // segundo desde el que empieza la canción (30 = minuto 0:30)
   whatsapp: "549XXXXXXXXXX",                       // 54 + 9 + código de área + número (REEMPLAZAR)
   mapsUrl: "https://maps.app.goo.gl/gSovV3jMHaxYqXNNA",
   alias: "vanessa.m",
@@ -29,10 +30,11 @@ document.head.appendChild(tag);
 window.onYouTubeIframeAPIReady = () => {
   yt = new YT.Player('yt-player', {
     height: '1', width: '1', videoId: CONFIG.youtubeId,
-    playerVars: { playsinline: 1, controls: 0, loop: 1, playlist: CONFIG.youtubeId },
+    playerVars: { playsinline: 1, controls: 0, start: CONFIG.inicio },
     events: {
       onReady: () => { ready = true; if (wantPlay) yt.playVideo(); },
       onStateChange: e => {
+        if (e.data === YT.PlayerState.ENDED && $('btn-repeat').classList.contains('on')) { yt.seekTo(CONFIG.inicio, true); yt.playVideo(); return; }   // al terminar, vuelve a empezar desde el segundo de inicio
         const playing = e.data === YT.PlayerState.PLAYING;
         playBtn.classList.toggle('playing', playing);
         clearInterval(ticker);
@@ -45,7 +47,7 @@ const isPlaying = () => ready && yt.getPlayerState() === 1;
 let userPaused = false, needResume = false;     // userPaused: ella pausó a propósito
 playBtn.onclick = () => { if (!ready) return; if (isPlaying()) { userPaused = true; yt.pauseVideo(); } else { userPaused = false; yt.playVideo(); } };
 bar.oninput = () => ready && yt.seekTo(yt.getDuration() * bar.value / 100, true);
-$('btn-prev').onclick = $('btn-next').onclick = () => { if (!ready) return; userPaused = false; yt.seekTo(0, true); yt.playVideo(); };
+$('btn-prev').onclick = $('btn-next').onclick = () => { if (!ready) return; userPaused = false; yt.seekTo(CONFIG.inicio, true); yt.playVideo(); };
 $('btn-repeat').onclick = e => e.currentTarget.classList.toggle('on');
 $('btn-shuffle').onclick = e => e.currentTarget.classList.toggle('on');
 $('yt-player').style.cssText = 'position:fixed;left:-9999px;width:1px;height:1px';
